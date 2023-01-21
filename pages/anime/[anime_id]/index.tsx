@@ -86,7 +86,7 @@ export default function AnimePage() {
 
                 <div className="grid grid-cols-5 xl:grid-cols-6 gap-3">
                   {[...(!isLoading ? anime.episodes : new Array(4))].map((episode: AnimeEpisodeType, i) => (
-                    <AnimeEpisodeCard animeID={anime.id} episode={episode} />
+                    <AnimeEpisodeCard key={i} animeID={anime.id} episode={episode} />
                   ))}
                 </div>
               </div>

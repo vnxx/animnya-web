@@ -42,8 +42,6 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="msapplication-TileColor" content="#111827" />
         <meta name="msapplication-config" content="/assets/icons/browserconfig.xml" />
         <meta name="theme-color" content="#111827" />
-
-        <body className='bg-primary antialiased text-white' />
       </Head>
 
       <header className='text-center font-bold outline-none py-6'>
