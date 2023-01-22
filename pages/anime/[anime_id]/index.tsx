@@ -46,14 +46,14 @@ export default function AnimePage() {
       </Head>
 
       <div className="mb-12 bg-black">
-        <Container className="flex justify-center items-center px-0 xl:px-3">
+        <Container className="flex justify-center items-center px-0 xl:px-6">
           {anime.trailer_url && (
             <iframe className="aspect-video w-full" src={anime.trailer_url} />
           )}
         </Container>
       </div>
 
-      <Container className="px-0 xl:px-3">
+      <Container className="px-0 xl:px-6">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="block xl:sticky xl:w-[40%]">
             <div className="space-y-8 bg-primary rounded-t-[30px]">

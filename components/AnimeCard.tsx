@@ -27,10 +27,10 @@ const AnimeCard = ({ anime, isLoading }: AnimeCardProps) => {
 
         <div className="mt-3 space-y-1">
           <div className="flex text-xs justify-between items-center">
-            <span className={`text-main-white flex items-center min-w-[60%] min-h-[20px] rounded-lg truncate ${!isLoading ? "animate-none bg-none" : "animate-pulse bg-gray-800"}`}>
+            <span className={`text-main-white flex items-center min-w-[60%] min-h-[18px] rounded-lg truncate ${!isLoading ? "animate-none bg-none" : "animate-pulse bg-gray-800"}`}>
               {anime?.created_at && dayjs(anime?.created_at).add(-7, "hours").fromNow()}
             </span>
-            <span className={`px-2 py-[1px] text-center rounded-md min-w-[30px] ${!isLoading ? "animate-none bg-secondary" : "animate-pulse bg-gray-800"}`}>
+            <span className={`px-2 py-[1px] min-h-[18px] text-center rounded-md min-w-[30px] ${!isLoading ? "animate-none bg-secondary" : "animate-pulse bg-gray-800"}`}>
               {anime?.episode}
             </span>
           </div>

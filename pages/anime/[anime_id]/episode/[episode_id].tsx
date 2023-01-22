@@ -48,7 +48,7 @@ export default function EpisodePage() {
       </Head>
 
       <div className="mb-12 bg-black">
-        <Container className="flex justify-center items-center xl:px-3">
+        <Container className="flex justify-center items-center xl:px-6">
           <div className="w-full space-y-6">
             {streamingUrl && (
               <iframe allowFullScreen={true} className="aspect-video w-full" src={streamingUrl} />
@@ -56,14 +56,14 @@ export default function EpisodePage() {
 
             <div className="flex overflow-auto space-x-4">
               {episode.watches.map((watch, i) => (
-                <button key={i} onClick={() => setStreamingUrl(watch.stream_url)} className={`flex-0 px-3 py-1 text-md whitespace-nowrap ${streamingUrl !== watch.stream_url ? 'bg-secondary text-white hover:bg-white hover:text-gray-900' : 'bg-white text-gray-900 hover:bg-secondary hover:text-white'} transition duration-300 ease-in-out rounded-md flex justify-center items-center`}>{watch.source}</button>
+                <button key={i} onClick={() => setStreamingUrl(watch.stream_url)} className={`flex-0 px-6 py-1 text-md whitespace-nowrap ${streamingUrl !== watch.stream_url ? 'bg-secondary text-white hover:bg-white hover:text-gray-900' : 'bg-white text-gray-900 hover:bg-secondary hover:text-white'} transition duration-300 ease-in-out rounded-md flex justify-center items-center`}>{watch.source}</button>
               ))}
             </div>
           </div>
         </Container>
       </div>
 
-      <Container className="px-0 xl:px-3">
+      <Container className="px-0 xl:px-6">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="block xl:sticky xl:w-[40%]">
             <div className="space-y-8 bg-primary rounded-t-[30px]">
