@@ -1,3 +1,14 @@
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /index.html [L]
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteRule ^(.*)$ /index.html [L]
+
+# Redirect requests to domain.com to web/index.html
+RewriteRule ^$ index.html [L]
+
+# Redirect requests to domain.com/anime/*/ to web/anime/[anime_id]/index.html
+RewriteRule ^anime/([^/]*)/?$ anime/[anime_id]/index.html [L]
+
+# Redirect requests to domain.com/anime/*/episode/*/ to web/anime/[anime_id]/episode/[episode_id]/index.html
+RewriteRule ^anime/([^/]*)/episode/([^/]*)/?$ anime/[anime_id]/episode/[episode_id]/index.html [L]
+
+ErrorDocument 404 https://animnya.bykevin.work/404.html
