@@ -51,7 +51,7 @@ export default function EpisodePage() {
         <Container className="flex justify-center items-center xl:px-3">
           <div className="w-full space-y-6">
             {streamingUrl && (
-              <iframe className="aspect-video w-full" src={streamingUrl} />
+              <iframe allowFullScreen={true} className="aspect-video w-full" src={streamingUrl} />
             )}
 
             <div className="flex overflow-auto space-x-4">
@@ -72,8 +72,7 @@ export default function EpisodePage() {
                 <button>Favorit: TODO</button>
               </div>
 
-              <h1 className="text-2xl font-bold">{anime.title}</h1>
-              <div dangerouslySetInnerHTML={{ __html: anime.synopsis }} />
+              <h1 className="text-2xl xl:text-4xl font-bold">Episode {episode.episode}: {anime.title}</h1>
             </div>
           </div>
 
@@ -84,19 +83,12 @@ export default function EpisodePage() {
                 <Button>TODO: Lanjut</Button>
               </div>
 
-              <div className="flex bg-primary overflow-auto space-x-4">
-                <AnimeInfoCard value={anime.studio} label="Studio" icon={RiHome7Line} />
-                <AnimeInfoCard value={anime.total_episodes} label="Total Episode" icon={MdOutlineSlowMotionVideo} />
-                <AnimeInfoCard value={anime.release_date} label="Rilis" icon={IoFlagOutline} />
-                <AnimeInfoCard value={anime.season} label="Season" icon={TiWeatherCloudy} />
-              </div>
-
               <div>
                 <h2 className="mb-6 text-2xl font-bold">Semua Episode</h2>
 
                 <div className="grid grid-cols-5 xl:grid-cols-6 gap-3">
-                  {[...(!isAnimeLoading ? anime.episodes : new Array(4))].map((episode: AnimeEpisodeType, i) => (
-                    <AnimeEpisodeCard animeID={anime.id} episode={episode} />
+                  {[...(!isAnimeLoading ? anime.episodes : new Array(4))].map((_episode: AnimeEpisodeType, i) => (
+                    <AnimeEpisodeCard isActive={_episode.id === episode.id} animeID={anime.id} episode={_episode} />
                   ))}
                 </div>
               </div>
