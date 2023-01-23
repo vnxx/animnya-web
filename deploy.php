@@ -27,7 +27,8 @@ task('frontend:build', function () {
   runLocally('npm install');
 
   $apiURL = 'https://animnya.bykevin.work/api';
-  runLocally("NEXT_PUBLIC_ANIMNYA_API_URL=$apiURL npm run build");
+  $gtagID = 'G-RXQN1KP15B';
+  runLocally("NEXT_PUBLIC_ANIMNYA_API_URL=$apiURL NEXT_PUBLIC_GTM_ID=$gtagID npm run build");
 });
 
 task('frontend:upload', function () {
