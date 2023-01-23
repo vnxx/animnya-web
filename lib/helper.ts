@@ -16,7 +16,6 @@ export function isInFavorites(animeID: number) {
   return favorites.some((anime: AnimeType) => anime.id === animeID);
 }
 
-
 export function getHistories(): AnimeHistoryType[] {
   let _histories = localStorage.getItem("histories");
   if (!_histories) {

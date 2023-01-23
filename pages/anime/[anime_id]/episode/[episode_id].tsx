@@ -6,14 +6,14 @@ import { AiFillStepForward, AiFillStepBackward } from "react-icons/ai"
 
 import Button from "../../../../components/Button"
 import Container from "../../../../components/Container"
+import useSharePage from "../../../../components/useSharePage"
 import LoadingScreen from "../../../../components/LoadingScreen"
 import AnimeEpisodeCard from "../../../../components/Anime/EpisodeCard"
-import useSharePage from "../../../../components/useSharePage"
+import FavoriteButton from "../../../../components/Anime/FavoriteButton"
 
 import { AnimeEpisodeType, AnimeType } from "../../../../types/anime"
 import { useAnimeEpisodeFetcher, useAnimeFetcher } from "../../../../lib/fetcher"
 import { getHistories } from "../../../../lib/helper"
-import FavoriteButton from "../../../../components/Anime/FavoriteButton"
 
 export default function EpisodePage() {
   const router = useRouter()

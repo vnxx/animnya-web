@@ -27,8 +27,19 @@ export default function HomePage() {
           <h2 className="font-bold text-2xl mb-5">Terbaru</h2>
 
           <div className="grid grid-cols-2 xl:grid-cols-5 gap-6 gap-y-8">
-            {[...(!isLoading && data ? data.data : new Array(20))].map((anime: AnimeEpisodeDataType, i: any) => (
-              <AnimeCard key={i} isLoading={isLoading} anime={anime} />
+            {[...(!isLoading && data ? data.data : new Array(20))].map((episode: AnimeEpisodeDataType, i: any) => (
+              <AnimeCard
+                key={i}
+                isLoading={isLoading}
+                anime={isLoading ? undefined : {
+                  id: episode.anime.id,
+                  title: episode.anime.title,
+                  cover_url: episode.anime.cover_url,
+                  created_at: episode.created_at,
+                  episode: episode.episode,
+                  episode_id: episode.id,
+                }}
+              />
             ))}
           </div>
         </Container>

@@ -1,13 +1,15 @@
-import '../styles/globals.css'
-
-import type { ReactElement, ReactNode } from 'react'
-import type { NextPage } from 'next'
-import type { AppProps } from 'next/app'
+import dayjs from 'dayjs'
 import Head from 'next/head'
 import Link from 'next/link'
-import dayjs from 'dayjs'
+import type { NextPage } from 'next'
+import type { AppProps } from 'next/app'
 import dayjsLocaleId from 'dayjs/locale/id'
+import type { ReactElement, ReactNode } from 'react'
 import dayjsRelativeTime from "dayjs/plugin/relativeTime"
+
+import Navigation from '../components/Navigation'
+
+import '../styles/globals.css'
 
 dayjs.locale(dayjsLocaleId)
 dayjs.extend(dayjsRelativeTime)
@@ -43,6 +45,8 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="msapplication-config" content="/assets/icons/browserconfig.xml" />
         <meta name="theme-color" content="#111827" />
       </Head>
+
+      <Navigation />
 
       <header className='text-center font-bold outline-none py-6'>
         <Link href="/">
