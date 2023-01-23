@@ -8,6 +8,7 @@ import { MdOutlineSlowMotionVideo } from 'react-icons/md'
 import Button from "../../../components/Button"
 import Container from "../../../components/Container"
 import AnimeInfoCard from "../../../components/Anime/InfoCard"
+import ExpandedText from "../../../components/Anime/ExpandedText"
 import AnimeEpisodeCard from "../../../components/Anime/EpisodeCard"
 
 import { useAnimeFetcher } from "../../../lib/fetcher"
@@ -63,7 +64,8 @@ export default function AnimePage() {
               </div>
 
               <h1 className="text-2xl font-bold">{anime.title}</h1>
-              <div dangerouslySetInnerHTML={{ __html: anime.synopsis }} />
+
+              <ExpandedText text={anime.synopsis} />
             </div>
           </div>
 
