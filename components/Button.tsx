@@ -16,8 +16,8 @@ const Button = ({ children, size = 'md', colorScheme = 'secondary', className, o
   }
 
   const colorSchemes = {
-    secondary: "text-white bg-secondary hover:bg-secondary-hover",
-    red: "text-white bg-main-red hover:bg-main-red-hover",
+    secondary: "text-white bg-secondary xl:hover:bg-secondary-hover",
+    red: "text-white bg-main-red xl:hover:bg-main-red-hover",
   }
   return (
     <button className={`flex justify-center w-full items-center font-semibold rounded-lg transition-all duration-300 ease-in-out ${colorSchemes[colorScheme]} ${sizes[size]} ${className}`} onClick={onClick}>{children}</button>

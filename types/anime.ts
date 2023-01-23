@@ -30,3 +30,10 @@ export type AnimeWatchesType = {
 export type AnimeEpisodeDataType = Omit<AnimeEpisodeType, 'AnimeWatches'> & {
   anime: Pick<AnimeType, 'id' | 'title' | 'slug' | 'cover_url'>
 }
+
+export type AnimeHistoryType = AnimeType & {
+  currentEpisodeID: number;
+  nextEpisodeID: number;
+  previousEpisodeID: number;
+  watchedEpisodeIds: number;
+}

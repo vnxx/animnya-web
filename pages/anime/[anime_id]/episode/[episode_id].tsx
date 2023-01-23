@@ -1,32 +1,64 @@
+import Link from "next/link"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect, useState } from 'react'
-import { RiHome7Line } from 'react-icons/ri'
-import { IoFlagOutline } from 'react-icons/io5'
-import { TiWeatherCloudy } from 'react-icons/ti'
-import { MdOutlineSlowMotionVideo } from 'react-icons/md'
+import { AiFillStepForward, AiFillStepBackward } from "react-icons/ai"
 
 import Button from "../../../../components/Button"
 import Container from "../../../../components/Container"
 import LoadingScreen from "../../../../components/LoadingScreen"
-import AnimeInfoCard from "../../../../components/Anime/InfoCard"
 import AnimeEpisodeCard from "../../../../components/Anime/EpisodeCard"
+import useSharePage from "../../../../components/useSharePage"
 
 import { AnimeEpisodeType, AnimeType } from "../../../../types/anime"
 import { useAnimeEpisodeFetcher, useAnimeFetcher } from "../../../../lib/fetcher"
+import { getHistories } from "../../../../lib/helper"
+import FavoriteButton from "../../../../components/Anime/FavoriteButton"
 
 export default function EpisodePage() {
   const router = useRouter()
 
   if (!router.query.anime_id || !router.query.episode_id) return <LoadingScreen />
 
+  const { ShareButton, ShareModal } = useSharePage()
+
   const { animeData, isAnimeLoading, isAnimeError } = useAnimeFetcher(router.query.anime_id as string)
   const { episodeData, isEpisodeLoading, isEpisodeError } = useAnimeEpisodeFetcher(router.query.anime_id as string, router.query.episode_id as string)
+  const [nextEpisode, setNextEpisode] = useState<AnimeEpisodeType | null>(null)
+  const [previousEpisode, setPreviousEpisode] = useState<AnimeEpisodeType | null>(null)
+
 
   const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
   useEffect(() => {
     if (episodeData) setStreamingUrl(episodeData.data.watches[0].stream_url)
-  }, [episodeData])
+
+    if (animeData && episodeData) {
+      const animeHistories = getHistories()
+      const animeHistory = animeHistories.find(history => history.id === animeData.data.id)
+      const currentEpisodeIndex = animeData.data.episodes.findIndex(episode => episode.id === episodeData.data.id)
+      if (animeHistory) {
+        animeHistory.currentEpisodeID = episodeData.data.id
+        animeHistory.nextEpisodeID = animeData.data.episodes[currentEpisodeIndex - 1]?.id
+        animeHistory.previousEpisodeID = animeData.data.episodes[currentEpisodeIndex + 1]?.id
+        localStorage.setItem("histories", JSON.stringify(animeHistories))
+      } else {
+        localStorage.setItem("histories", JSON.stringify([
+          ...animeHistories,
+          {
+            ...animeData.data,
+            currentEpisodeID: episodeData.data.id,
+            nextEpisodeID: animeData.data.episodes[currentEpisodeIndex - 1]?.id,
+            previousEpisodeID: animeData.data.episodes[currentEpisodeIndex + 1]?.id
+          }
+        ]))
+      }
+
+      setNextEpisode(animeData.data.episodes[currentEpisodeIndex - 1])
+      setPreviousEpisode(animeData.data.episodes[currentEpisodeIndex + 1])
+    }
+
+  }, [episodeData, animeData])
+
 
   if (isAnimeError || isEpisodeError || (!isAnimeLoading && !animeData) || (!isEpisodeLoading && !episodeData)) {
     return (
@@ -56,7 +88,7 @@ export default function EpisodePage() {
 
             <div className="flex overflow-auto space-x-4">
               {episode.watches.map((watch, i) => (
-                <button key={i} onClick={() => setStreamingUrl(watch.stream_url)} className={`flex-0 px-6 py-1 text-md whitespace-nowrap ${streamingUrl !== watch.stream_url ? 'bg-secondary text-white hover:bg-white hover:text-gray-900' : 'bg-white text-gray-900 hover:bg-secondary hover:text-white'} transition duration-300 ease-in-out rounded-md flex justify-center items-center`}>{watch.source}</button>
+                <button key={i} onClick={() => setStreamingUrl(watch.stream_url)} className={`flex-0 px-6 py-1 text-md whitespace-nowrap ${streamingUrl !== watch.stream_url ? 'bg-secondary text-white xl:hover:bg-white xl:hover:text-gray-900' : 'bg-white text-gray-900 xl:hover:bg-secondary xl:hover:text-white'} transition duration-300 ease-in-out rounded-md flex justify-center items-center`}>{watch.source}</button>
               ))}
             </div>
           </div>
@@ -68,8 +100,8 @@ export default function EpisodePage() {
           <div className="block xl:sticky xl:w-[40%]">
             <div className="space-y-8 bg-primary rounded-t-[30px]">
               <div className="flex w-full justify-between items-center flex-0">
-                <button>Share: TODO</button>
-                <button>Favorit: TODO</button>
+                <ShareButton />
+                <FavoriteButton anime={anime} />
               </div>
 
               <h1 className="text-2xl xl:text-4xl font-bold">Episode {episode.episode}: {anime.title}</h1>
@@ -78,9 +110,18 @@ export default function EpisodePage() {
 
           <div className="xl:w-[60%]">
             <div className="space-y-8">
-              <div className="grid grid-cols-2 gap-3">
-                <Button colorScheme="red">TODO: Tonton</Button>
-                <Button>TODO: Lanjut</Button>
+              <div className={`grid ${previousEpisode && nextEpisode ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
+                {previousEpisode && (
+                  <Link href={`/anime/${anime.id}/episode/${previousEpisode.id}`}>
+                    <Button className="flex justify-center items-center"><AiFillStepBackward size='20px' /> <span className="ml-2">Eps {previousEpisode.episode}</span></Button>
+                  </Link>
+                )}
+
+                {nextEpisode && (
+                  <Link href={`/anime/${anime.id}/episode/${nextEpisode.id}`}>
+                    <Button colorScheme="red" className="flex justify-center items-center"><AiFillStepForward size='20px' /><span className="ml-2">Eps {nextEpisode.episode}</span></Button>
+                  </Link>
+                )}
               </div>
 
               <div>
@@ -96,6 +137,8 @@ export default function EpisodePage() {
           </div>
         </div>
       </Container>
+
+      <ShareModal />
     </>
   )
 }
