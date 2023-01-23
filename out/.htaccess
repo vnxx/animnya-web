@@ -5,14 +5,14 @@ RewriteEngine On
 # Redirect requests to domain.com to web/index.html
 RewriteRule ^$ index.html [L]
 
-# Redirect requests to domain.com/anime/*/ to web/anime/[anime_id]/index.html
-RewriteRule ^anime/([^/]*)/?$ anime/[anime_id]/index.html [L]
-
 # Redirect requests to domain.com/anime/search to web/anime/search/index.html
 RewriteRule ^anime/search/?$ anime/search/index.html [L]
 
 # Redirect requests to domain.com/anime/favorites to web/anime/favorites/index.html
 RewriteRule ^anime/favorites/?$ anime/favorites/index.html [L]
+
+# Redirect requests to domain.com/anime/*/ to web/anime/[anime_id]/index.html
+RewriteRule ^anime/([^/]*)/?$ anime/[anime_id]/index.html [L]
 
 # Redirect requests to domain.com/anime/*/episode/*/ to web/anime/[anime_id]/episode/[episode_id]/index.html
 RewriteRule ^anime/([^/]*)/episode/([^/]*)/?$ anime/[anime_id]/episode/[episode_id]/index.html [L]
