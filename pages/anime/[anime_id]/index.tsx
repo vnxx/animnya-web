@@ -10,6 +10,7 @@ import Container from "../../../components/Container"
 import AnimeInfoCard from "../../../components/Anime/InfoCard"
 import ExpandedText from "../../../components/Anime/ExpandedText"
 import AnimeEpisodeCard from "../../../components/Anime/EpisodeCard"
+import useSharePage from "../../../components/useSharePage"
 
 import { useAnimeFetcher } from "../../../lib/fetcher"
 import { AnimeEpisodeType, AnimeType } from "../../../types/anime"
@@ -21,6 +22,8 @@ export default function AnimePage() {
       <h1 className="text-2xl font-bold">Loading...</h1>
     </div>
   )
+
+  const { ShareButton, ShareModal } = useSharePage()
 
   const { animeData: data, isAnimeLoading: isLoading, isAnimeError: isError } = useAnimeFetcher(router.query.anime_id as string)
 
@@ -39,6 +42,7 @@ export default function AnimePage() {
   )
 
   const anime = data?.data as AnimeType
+
 
   return (
     <>
@@ -59,7 +63,7 @@ export default function AnimePage() {
           <div className="block xl:sticky xl:w-[40%]">
             <div className="space-y-8 bg-primary rounded-t-[30px]">
               <div className="flex w-full justify-between items-center flex-0">
-                <button>Share: TODO</button>
+                <ShareButton />
                 <button>Favorit: TODO</button>
               </div>
 
@@ -96,6 +100,8 @@ export default function AnimePage() {
           </div>
         </div>
       </Container>
+
+      <ShareModal />
     </>
   )
 }
