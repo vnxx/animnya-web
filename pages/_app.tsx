@@ -59,7 +59,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
       <Component {...pageProps} />
 
-      <footer className='text-center font-bold outline-none py-6'>
+      <footer className='text-center font-bold outline-none h-[100px]'>
       </footer>
     </>
   )
