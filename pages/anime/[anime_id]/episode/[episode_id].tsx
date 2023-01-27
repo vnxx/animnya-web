@@ -38,8 +38,6 @@ export default function EpisodePage() {
       const currentEpisodeIndex = animeData.data.episodes.findIndex(episode => episode.id === episodeData.data.id)
       if (animeHistory) {
         animeHistory.currentEpisodeID = episodeData.data.id
-        animeHistory.nextEpisodeID = animeData.data.episodes[currentEpisodeIndex - 1]?.id
-        animeHistory.previousEpisodeID = animeData.data.episodes[currentEpisodeIndex + 1]?.id
         localStorage.setItem("histories", JSON.stringify(animeHistories))
       } else {
         localStorage.setItem("histories", JSON.stringify([
@@ -47,8 +45,6 @@ export default function EpisodePage() {
           {
             ...animeData.data,
             currentEpisodeID: episodeData.data.id,
-            nextEpisodeID: animeData.data.episodes[currentEpisodeIndex - 1]?.id,
-            previousEpisodeID: animeData.data.episodes[currentEpisodeIndex + 1]?.id
           }
         ]))
       }
@@ -129,7 +125,7 @@ export default function EpisodePage() {
 
                 <div className="grid grid-cols-5 xl:grid-cols-6 gap-3">
                   {[...(!isAnimeLoading ? anime.episodes : new Array(4))].map((_episode: AnimeEpisodeType, i) => (
-                    <AnimeEpisodeCard isActive={_episode.id === episode.id} animeID={anime.id} episode={_episode} />
+                    <AnimeEpisodeCard key={i} isActive={_episode.id === episode.id} animeID={anime.id} episode={_episode} />
                   ))}
                 </div>
               </div>

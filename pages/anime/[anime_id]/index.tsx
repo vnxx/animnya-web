@@ -38,8 +38,9 @@ export default function AnimePage() {
 
       const animeHistory = animeHistoeies.find(history => history.id === data.data.id)
       if (animeHistory) {
+        const currrentEpisodeIndex = episodes.findIndex(episode => episode.id === animeHistory.currentEpisodeID)
         setCurrentEpisode(episodes.find(episode => episode.id === animeHistory.currentEpisodeID) || null)
-        setNextEpisode(episodes.find(episode => episode.id === animeHistory.nextEpisodeID) || null)
+        setNextEpisode(episodes[currrentEpisodeIndex - 1] || null)
       }
     }
   }, [data])

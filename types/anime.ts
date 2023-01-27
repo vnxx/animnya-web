@@ -33,7 +33,5 @@ export type AnimeEpisodeDataType = Omit<AnimeEpisodeType, 'AnimeWatches'> & {
 
 export type AnimeHistoryType = AnimeType & {
   currentEpisodeID: number;
-  nextEpisodeID: number;
-  previousEpisodeID: number;
   watchedEpisodeIds: number;
 }
