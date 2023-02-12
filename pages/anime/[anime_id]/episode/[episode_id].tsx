@@ -68,11 +68,12 @@ export default function EpisodePage() {
 
   const anime = animeData?.data as AnimeType
   const episode = episodeData?.data as AnimeEpisodeType
+  const title = `Episode ${episode.episode} ${anime.title}`
 
   return (
     <>
       <Head>
-        <title>{anime.title} | Animeku</title>
+        <title>{title} | Animnya</title>
       </Head>
 
       <div className="mb-12 bg-black">
@@ -100,7 +101,7 @@ export default function EpisodePage() {
                 <FavoriteButton anime={anime} />
               </div>
 
-              <h1 className="text-2xl xl:text-4xl font-bold">Episode {episode.episode}: {anime.title}</h1>
+              <h1 className="text-2xl xl:text-4xl font-bold">{title}</h1>
             </div>
           </div>
 
