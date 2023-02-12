@@ -33,7 +33,7 @@ export function isInHistories(animeID: number) {
 }
 
 export function isNewEpisode(animeID: number, episodeID: number) {
-  if (!isInHistories(animeID)) return false;
+  if (!isInFavorites(animeID)) return false;
 
   const animeHistories = getHistories()
   const animeHistory = animeHistories.find(history => history.id === animeID)
