@@ -31,3 +31,15 @@ export function isInHistories(animeID: number) {
   let histories = getHistories();
   return histories.some((anime) => anime.id === animeID);
 }
+
+export function isNewEpisode(animeID: number, episodeID: number) {
+  if (!isInHistories(animeID)) return false;
+
+  const animeHistories = getHistories()
+  const animeHistory = animeHistories.find(history => history.id === animeID)
+  if (animeHistory) {
+    if (episodeID > animeHistory.currentEpisodeID) return true
+  }
+
+  return false;
+}

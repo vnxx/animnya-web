@@ -2,6 +2,7 @@ import Head from 'next/head'
 
 import AnimeCard from '../components/AnimeCard'
 import Container from '../components/Container'
+
 import { useNewestAnimeFetcher } from '../lib/fetcher'
 import { AnimeEpisodeDataType } from '../types/anime'
 

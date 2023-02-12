@@ -1,8 +1,8 @@
 import dayjs from "dayjs"
-import { useEffect, useState } from "react"
-import { getHistories, isInFavorites } from "../lib/helper"
+import { useState } from "react"
 
 import LinkWrapper from "./LinkWrapper"
+import { isNewEpisode } from "../lib/helper"
 
 type AnimeCardProps = {
   anime?: {
@@ -18,19 +18,7 @@ type AnimeCardProps = {
 
 const AnimeCard = ({ anime, isLoading }: AnimeCardProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false)
-  const [isNewEpisode, setIsNewEpisode] = useState(false)
-
-  useEffect(() => {
-    if (anime?.episode_id) {
-      if (isInFavorites(anime?.id)) {
-        const animeHistories = getHistories()
-        const animeHistory = animeHistories.find(history => history.id === anime?.id)
-        if (animeHistory) {
-          if (anime?.episode_id > animeHistory.currentEpisodeID) setIsNewEpisode(true)
-        }
-      }
-    }
-  }, [])
+  const newEpisode = anime && anime.episode_id ? isNewEpisode(anime.id, anime.episode_id) : false
 
   return (
     <LinkWrapper isLinkAble={!isLoading} href={`/anime/${anime?.id}`}>
@@ -54,7 +42,7 @@ const AnimeCard = ({ anime, isLoading }: AnimeCardProps) => {
               )}
 
               {(isLoading || anime?.episode) && (
-                <span className={`px-2 py-[1px] min-h-[18px] text-center rounded-md min-w-[30px] ${!isLoading ? "animate-none " + (isNewEpisode ? "bg-main-red" : "bg-secondary") : "animate-pulse bg-gray-800"}`}>
+                <span className={`px-2 py-[1px] min-h-[18px] text-center rounded-md min-w-[30px] ${!isLoading ? "animate-none " + (newEpisode ? "bg-main-red" : "bg-secondary") : "animate-pulse bg-gray-800"}`}>
                   {anime?.episode}
                 </span>
               )}
