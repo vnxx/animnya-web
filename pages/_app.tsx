@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import Head from 'next/head'
 import Link from 'next/link'
+import getConfig from 'next/config'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import dayjsLocaleId from 'dayjs/locale/id'
@@ -22,6 +23,8 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
+
+const { publicRuntimeConfig } = getConfig();
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
@@ -47,14 +50,14 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="theme-color" content="#111827" />
       </Head>
 
-      {process.env.NEXT_PUBLIC_GTM_ID && (
+      {publicRuntimeConfig.GMTId && (
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+            })(window,document,'script','dataLayer','${publicRuntimeConfig.GMTId}');
           `}
         </Script>
       )}
