@@ -15,12 +15,12 @@ add('writable_dirs', []);
 
 // Hosts
 host('prod')
-  ->setHostname('153.92.8.177')
+  ->setHostname('153.92.13.11')
   ->setPort(65002)
   ->set('branch', 'main')
   ->set('remote_user', 'u6131667')
   ->set('labels', ['stage' => 'dev'])
-  ->set('deploy_path', '/home/u6131667/public_html/animenya.bykevin.work/web');
+  ->set('deploy_path', '/home/u6131667/public_html/a.bykevin.work/web');
 
 // Tasks
 task('frontend:build', function () {
