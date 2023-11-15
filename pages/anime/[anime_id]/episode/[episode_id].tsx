@@ -21,6 +21,10 @@ import { getHistories } from "../../../../lib/helper";
 export default function EpisodePage() {
 	const router = useRouter();
 
+	useEffect(() => {
+		screen.orientation.unlock();
+	}, []);
+
 	if (!router.query.anime_id || !router.query.episode_id)
 		return <LoadingScreen />;
 
