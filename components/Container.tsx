@@ -1,14 +1,14 @@
-import React from "react"
+import React from "react";
+import { cn } from "../lib/helper";
 
 type ContainerProps = {
-  children: React.ReactNode
-  className?: string
-}
+	children: React.ReactNode;
+	className?: string;
+};
 const Container = ({ children, className }: ContainerProps) => (
-  <div className={`max-w-5xl m-auto relative px-6 ${className}`}>
-    {children}
-  </div>
-)
+	<div className={cn("max-w-5xl m-auto relative px-6", className)}>
+		{children}
+	</div>
+);
 
-
-export default Container
+export default Container;
