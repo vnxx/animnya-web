@@ -10,8 +10,8 @@ export function getFavorites(): AnimeType[] {
 		return [];
 	}
 
-	let favorites = JSON.parse(_favorites);
-	return favorites;
+	let favorites = JSON.parse(_favorites) as AnimeType[];
+	return favorites.reverse();
 }
 
 export function isInFavorites(animeID: number) {
