@@ -3,11 +3,12 @@ import getConfig from "next/config";
 import { FormEvent, useRef, useState } from "react";
 
 import Button from "../../components/Button";
+import Spinner from "../../components/Spinner";
 import Container from "../../components/Container";
 import AnimeCard from "../../components/AnimeCard";
 
+import { cn } from "../../lib/helper";
 import { AnimeType } from "../../types/anime";
-import Spinner from "../../components/Spinner";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -44,23 +45,32 @@ export default function SearchPage() {
 
 			<section>
 				<Container>
-					<h2 className="font-bold text-2xl mb-5">Search</h2>
-					<form onSubmit={handleSubmit} className="space-y-3">
-						<input
-							className="text-black w-full p-2 rounded-full px-6 h-[40px] outline-none ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
-							readOnly={isLoading}
-							type="text"
-							ref={searchRef}
-							placeholder="Sword Art Online"
+					<div
+						className={cn(data.length > 0 ? "mt-0" : "mt-[calc(50vh-350px)]")}
+					>
+						<img
+							className={cn("mx-auto", data.length > 0 ? "hidden" : "block")}
+							src="/search_mascot.gif"
+							height="200px"
 						/>
-						<Button
-							disabled={isLoading}
-							type="submit"
-							className="h-[40px] rounded-full"
-						>
-							{isLoading ? <Spinner /> : "Okay"}
-						</Button>
-					</form>
+						<h2 className="font-bold text-2xl mb-5">Search</h2>
+						<form onSubmit={handleSubmit} className="space-y-3">
+							<input
+								className="text-black w-full p-2 rounded-full px-6 h-[40px] outline-none ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+								readOnly={isLoading}
+								type="text"
+								ref={searchRef}
+								placeholder="Sword Art Online"
+							/>
+							<Button
+								disabled={isLoading}
+								type="submit"
+								className="h-[40px] rounded-full"
+							>
+								{isLoading ? <Spinner /> : "Okay"}
+							</Button>
+						</form>
+					</div>
 
 					<div className="grid grid-cols-2 xl:grid-cols-5 gap-6 gap-y-8 mt-6">
 						{[...(!isLoading && data ? data : new Array(4))].map(
