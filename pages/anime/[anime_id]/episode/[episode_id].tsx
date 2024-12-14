@@ -13,191 +13,203 @@ import FavoriteButton from "../../../../components/Anime/FavoriteButton";
 
 import { AnimeEpisodeType, AnimeType } from "../../../../types/anime";
 import {
-	useAnimeEpisodeFetcher,
-	useAnimeFetcher,
+  useAnimeEpisodeFetcher,
+  useAnimeFetcher,
 } from "../../../../lib/fetcher";
 import { getHistories } from "../../../../lib/helper";
 
 export default function EpisodePage() {
-	const router = useRouter();
+  const router = useRouter();
 
-	useEffect(() => {
-		screen.orientation.unlock();
-	}, []);
+  useEffect(() => {
+    screen.orientation.unlock();
+  }, []);
 
-	if (!router.query.anime_id || !router.query.episode_id)
-		return <LoadingScreen />;
+  if (!router.query.anime_id || !router.query.episode_id) {
+    return <LoadingScreen />;
+  }
 
-	const { ShareButton, ShareModal } = useSharePage();
+  return <Body />;
+}
 
-	const { animeData, isAnimeLoading, isAnimeError } = useAnimeFetcher(
-		router.query.anime_id as string
-	);
-	const { episodeData, isEpisodeLoading, isEpisodeError } =
-		useAnimeEpisodeFetcher(
-			router.query.anime_id as string,
-			router.query.episode_id as string
-		);
-	const [nextEpisode, setNextEpisode] = useState<AnimeEpisodeType | null>(null);
-	const [previousEpisode, setPreviousEpisode] =
-		useState<AnimeEpisodeType | null>(null);
+function Body() {
+  const router = useRouter();
 
-	const [streamingUrl, setStreamingUrl] = useState<string | null>(null);
-	useEffect(() => {
-		if (episodeData) setStreamingUrl(episodeData.data.watches[0].stream_url);
+  useEffect(() => {
+    screen.orientation.unlock();
+  }, []);
 
-		if (animeData && episodeData) {
-			const animeHistories = getHistories();
-			const animeHistory = animeHistories.find(
-				(history) => history.id === animeData.data.id
-			);
-			const currentEpisodeIndex = animeData.data.episodes.findIndex(
-				(episode) => episode.id === episodeData.data.id
-			);
-			if (animeHistory) {
-				animeHistory.currentEpisodeID = episodeData.data.id;
-				localStorage.setItem("histories", JSON.stringify(animeHistories));
-			} else {
-				localStorage.setItem(
-					"histories",
-					JSON.stringify([
-						...animeHistories,
-						{
-							...animeData.data,
-							currentEpisodeID: episodeData.data.id,
-						},
-					])
-				);
-			}
+  if (!router.query.anime_id || !router.query.episode_id)
+    return <LoadingScreen />;
 
-			setNextEpisode(animeData.data.episodes[currentEpisodeIndex - 1]);
-			setPreviousEpisode(animeData.data.episodes[currentEpisodeIndex + 1]);
-		}
-	}, [episodeData, animeData]);
+  const { ShareButton, ShareModal } = useSharePage();
 
-	if (
-		isAnimeError ||
-		isEpisodeError ||
-		(!isAnimeLoading && !animeData) ||
-		(!isEpisodeLoading && !episodeData)
-	) {
-		return (
-			<div>
-				<h1>Ada error</h1>
-			</div>
-		);
-	}
+  const { animeData, isAnimeLoading, isAnimeError } = useAnimeFetcher(
+    router.query.anime_id as string,
+  );
+  const { episodeData, isEpisodeLoading, isEpisodeError } =
+    useAnimeEpisodeFetcher(
+      router.query.anime_id as string,
+      router.query.episode_id as string,
+    );
+  const [nextEpisode, setNextEpisode] = useState<AnimeEpisodeType | null>(null);
+  const [previousEpisode, setPreviousEpisode] =
+    useState<AnimeEpisodeType | null>(null);
 
-	if (isAnimeLoading || isEpisodeLoading) return <LoadingScreen />;
+  const [streamingUrl, setStreamingUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (episodeData) setStreamingUrl(episodeData.data.watches[0].stream_url);
 
-	const anime = animeData?.data as AnimeType;
-	const episode = episodeData?.data as AnimeEpisodeType;
-	const title = `Episode ${episode.episode} ${anime.title}`;
+    if (animeData && episodeData) {
+      const animeHistories = getHistories();
+      const animeHistory = animeHistories.find(
+        (history) => history.id === animeData.data.id,
+      );
+      const currentEpisodeIndex = animeData.data.episodes.findIndex(
+        (episode) => episode.id === episodeData.data.id,
+      );
+      if (animeHistory) {
+        animeHistory.currentEpisodeID = episodeData.data.id;
+        localStorage.setItem("histories", JSON.stringify(animeHistories));
+      } else {
+        localStorage.setItem(
+          "histories",
+          JSON.stringify([
+            ...animeHistories,
+            {
+              ...animeData.data,
+              currentEpisodeID: episodeData.data.id,
+            },
+          ]),
+        );
+      }
 
-	return (
-		<>
-			<Head>
-				<title>{title} | Animnya</title>
-			</Head>
+      setNextEpisode(animeData.data.episodes[currentEpisodeIndex - 1]);
+      setPreviousEpisode(animeData.data.episodes[currentEpisodeIndex + 1]);
+    }
+  }, [episodeData, animeData]);
 
-			<div className="mb-12 bg-black">
-				<Container className="flex justify-center items-center xl:px-6">
-					<div className="w-full space-y-6">
-						{streamingUrl && (
-							<iframe
-								allowFullScreen={true}
-								className="aspect-video w-full"
-								src={streamingUrl}
-							/>
-						)}
+  if (
+    isAnimeError ||
+    isEpisodeError ||
+    (!isAnimeLoading && !animeData) ||
+    (!isEpisodeLoading && !episodeData)
+  ) {
+    return (
+      <div>
+        <h1>Ada error</h1>
+      </div>
+    );
+  }
 
-						<div className="flex overflow-auto space-x-4">
-							{episode.watches.map((watch, i) => (
-								<button
-									key={i}
-									onClick={() => setStreamingUrl(watch.stream_url)}
-									className={`flex-0 px-6 py-1 text-md whitespace-nowrap ${
-										streamingUrl !== watch.stream_url
-											? "bg-secondary text-white xl:hover:bg-white xl:hover:text-gray-900"
-											: "bg-white text-gray-900 xl:hover:bg-secondary xl:hover:text-white"
-									} transition duration-300 ease-in-out rounded-md flex justify-center items-center`}
-								>
-									{watch.source}
-								</button>
-							))}
-						</div>
-					</div>
-				</Container>
-			</div>
+  if (isAnimeLoading || isEpisodeLoading) return <LoadingScreen />;
 
-			<Container className="xl:px-6">
-				<div className="flex flex-col lg:flex-row gap-6">
-					<div className="block xl:sticky xl:w-[40%]">
-						<div className="space-y-8 bg-primary rounded-t-[30px]">
-							<div className="flex w-full justify-between items-center flex-0">
-								<ShareButton />
-								<FavoriteButton anime={anime} />
-							</div>
+  const anime = animeData?.data as AnimeType;
+  const episode = episodeData?.data as AnimeEpisodeType;
+  const title = `Episode ${episode.episode} ${anime.title}`;
 
-							<h1 className="text-2xl xl:text-4xl font-bold">{title}</h1>
-						</div>
-					</div>
+  return (
+    <>
+      <Head>
+        <title>{title} | Animnya</title>
+      </Head>
 
-					<div className="xl:w-[60%]">
-						<div className="space-y-8">
-							<div
-								className={`grid ${
-									previousEpisode && nextEpisode ? "grid-cols-2" : "grid-cols-1"
-								} gap-3`}
-							>
-								{previousEpisode && (
-									<Link
-										href={`/anime/${anime.id}/episode/${previousEpisode.id}`}
-									>
-										<Button className="flex justify-center items-center">
-											<AiFillStepBackward size="20px" />{" "}
-											<span className="ml-2">
-												Eps {previousEpisode.episode}
-											</span>
-										</Button>
-									</Link>
-								)}
+      <div className="mb-12 bg-black">
+        <Container className="flex justify-center items-center xl:px-6">
+          <div className="w-full space-y-6">
+            {streamingUrl && (
+              <iframe
+                allowFullScreen={true}
+                className="aspect-video w-full"
+                src={streamingUrl}
+              />
+            )}
 
-								{nextEpisode && (
-									<Link href={`/anime/${anime.id}/episode/${nextEpisode.id}`}>
-										<Button
-											colorScheme="red"
-											className="flex justify-center items-center"
-										>
-											<AiFillStepForward size="20px" />
-											<span className="ml-2">Eps {nextEpisode.episode}</span>
-										</Button>
-									</Link>
-								)}
-							</div>
+            <div className="flex overflow-auto space-x-4">
+              {episode.watches.map((watch, i) => (
+                <button
+                  key={i}
+                  onClick={() => setStreamingUrl(watch.stream_url)}
+                  className={`flex-0 px-6 py-1 text-md whitespace-nowrap ${streamingUrl !== watch.stream_url
+                      ? "bg-secondary text-white xl:hover:bg-white xl:hover:text-gray-900"
+                      : "bg-white text-gray-900 xl:hover:bg-secondary xl:hover:text-white"
+                    } transition duration-300 ease-in-out rounded-md flex justify-center items-center`}
+                >
+                  {watch.source}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </div>
 
-							<div>
-								<h2 className="mb-6 text-2xl font-bold">Semua Episode</h2>
+      <Container className="xl:px-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="block xl:sticky xl:w-[40%]">
+            <div className="space-y-8 bg-primary rounded-t-[30px]">
+              <div className="flex w-full justify-between items-center flex-0">
+                <ShareButton />
+                <FavoriteButton anime={anime} />
+              </div>
 
-								<div className="grid grid-cols-5 xl:grid-cols-6 gap-3">
-									{[...(!isAnimeLoading ? anime.episodes : new Array(4))].map(
-										(_episode: AnimeEpisodeType, i) => (
-											<AnimeEpisodeCard
-												key={i}
-												isActive={_episode.id === episode.id}
-												animeID={anime.id}
-												episode={_episode}
-											/>
-										)
-									)}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</Container>
+              <h1 className="text-2xl xl:text-4xl font-bold">{title}</h1>
+            </div>
+          </div>
 
-			<ShareModal />
-		</>
-	);
+          <div className="xl:w-[60%]">
+            <div className="space-y-8">
+              <div
+                className={`grid ${previousEpisode && nextEpisode ? "grid-cols-2" : "grid-cols-1"
+                  } gap-3`}
+              >
+                {previousEpisode && (
+                  <Link
+                    href={`/anime/${anime.id}/episode/${previousEpisode.id}`}
+                  >
+                    <Button className="flex justify-center items-center">
+                      <AiFillStepBackward size="20px" />{" "}
+                      <span className="ml-2">
+                        Eps {previousEpisode.episode}
+                      </span>
+                    </Button>
+                  </Link>
+                )}
+
+                {nextEpisode && (
+                  <Link href={`/anime/${anime.id}/episode/${nextEpisode.id}`}>
+                    <Button
+                      colorScheme="red"
+                      className="flex justify-center items-center"
+                    >
+                      <AiFillStepForward size="20px" />
+                      <span className="ml-2">Eps {nextEpisode.episode}</span>
+                    </Button>
+                  </Link>
+                )}
+              </div>
+
+              <div>
+                <h2 className="mb-6 text-2xl font-bold">Semua Episode</h2>
+
+                <div className="grid grid-cols-5 xl:grid-cols-6 gap-3">
+                  {[...(!isAnimeLoading ? anime.episodes : new Array(4))].map(
+                    (_episode: AnimeEpisodeType, i) => (
+                      <AnimeEpisodeCard
+                        key={i}
+                        isActive={_episode.id === episode.id}
+                        animeID={anime.id}
+                        episode={_episode}
+                      />
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+
+      <ShareModal />
+    </>
+  );
 }
