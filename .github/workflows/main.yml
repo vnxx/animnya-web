@@ -1,29 +1,35 @@
-name: Deploy
+name: publish
 on:
   push:
     branches:
       - main
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: vnxx/animnya-web
+
 jobs:
-  deployment:
+  build-and-push-image:
+    name: publish image
     runs-on: ubuntu-latest
+    # runs-on: blacksmith-4vcpu-ubuntu-2204
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Setup NodeJs
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
+      - name: Login
+        run: |
+          echo ${{ secrets.PAT }} | docker login ghcr.io -u vnxx --password-stdin
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.1"
+      - name: Get short SHA
+        id: slug
+        run: echo "SHA7=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_ENV
 
-      - name: Deploy
-        uses: deployphp/action@v1
-        with:
-          deployer-version: "7.0.0"
-          private-key: ${{ secrets.SSH_KEY }}
-          dep: deploy
+      - name: Build and Publish
+        run: |
+          docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.head_ref || github.ref_name }}-${{ env.SHA7 }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --all-tags
+
+      - name: Deploy to Coolify
+        run: |
+          curl --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
